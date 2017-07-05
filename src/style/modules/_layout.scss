@@ -1,0 +1,34 @@
+/*
+ * _layout.scss
+ *
+ */
+
+/* _layout config */
+
+/* _layout default */
+@include default {
+  body { padding: 20px; }
+
+  canvas {
+    display: block;
+    background: #eee;
+  }
+
+  button { margin: 0 10px 10px 0; }
+}
+
+/* _layout small-only */
+@include small-only {
+}
+
+/* _layout medium-only */
+@include medium-only {
+}
+
+/* _layout medium-and-above */
+@include medium-and-above {
+}
+
+/* _layout large-and-above */
+@include large-and-above {
+}
