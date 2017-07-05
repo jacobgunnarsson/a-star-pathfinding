@@ -1,6 +1,6 @@
 interface Listener {
   eventName: string;
-  element: HTMLElement;
+  element: Element;
   callback: (event: Event) => void;
 }
 
@@ -11,7 +11,7 @@ export class IOService {
     this.addEventListeners();
   }
 
-  public on(eventName: string, element: HTMLElement, callback: (event: Event) => void) {
+  public on(eventName: string, element: Element, callback: (event: Event) => void) {
     element.addEventListener(eventName, callback);
 
     this.listeners.push({ eventName, element, callback });

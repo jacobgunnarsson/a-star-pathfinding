@@ -3,16 +3,21 @@ import { IOServiceInstance } from '../services/io.service';
 import { Tile } from './tile.module';
 import { Target } from './target.module';
 import { Player } from './player.module';
+import { BreadthFirst } from './breadth-first.module';
 
-import { randomNumber } from '../utils/random-number';
+import { randomNumber, getArrayIndex } from '../utils';
 
 export class World {
   private io = IOServiceInstance;
+  private pathFinding;
 
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private tiles: Tile[][] = [];
+  private target: Target;
+  private player: Player;
   private hoveredTile: Tile;
+  private hoveredGraphTile: Tile;
   private tileSize = 30;
   private horizontalSize = 20;
   private verticalSize = 20;
@@ -28,47 +33,80 @@ export class World {
     this.placePlayer();
   }
 
-  public update(): void {
+  public update() {
     this.render();
+
+    if (this.pathFinding) {
+      this.pathFinding.render();
+    }
   }
 
   public getTileForPixelCoordinate(x: number, y: number): Tile {
     const tileX = Math.floor(x / this.tileSize);
     const tileY = Math.floor(y / this.tileSize);
 
-    return this.tiles[tileX][tileY];
+    return getArrayIndex(this.tiles, tileX, tileY);
   }
 
   private bindEvents() {
     this.io.on('click', this.canvas, this.onCanvasClick.bind(this));
     this.io.on('mousemove', this.canvas, this.onCanvasMouseMove.bind(this));
     this.io.on('mouseleave', this.canvas, this.onCanvasMouseLeave.bind(this));
+    this.io.on('click', document.querySelector('.js-run-breadth-first'), this.runBreadthFirst.bind(this));
+    this.io.on('click', document.querySelector('.js-reset-pathfinding'), this.resetPathfinding.bind(this));
+    this.io.on('click', document.querySelector('.js-reset-tiles'), this.resetTiles.bind(this));
   }
 
   private onCanvasClick(event: MouseEvent) {
-    const tile = this.getTileForPixelCoordinate(event.clientX, event.clientY);
+    const tile = this.getTileForPixelCoordinate(event.layerX, event.layerY);
 
     if (tile.isEditable && typeof tile.isPassable !== 'undefined') {
       tile.isPassable = !tile.isPassable;
+
+      if (this.pathFinding) { this.resetPathfinding(); }
     }
   }
 
   private onCanvasMouseMove(event: MouseEvent) {
-    const tile = this.getTileForPixelCoordinate(event.clientX, event.clientY);
+    const tile = this.getTileForPixelCoordinate(event.layerX, event.layerY);
 
     if (this.hoveredTile !== tile) {
       this.hoveredTile = tile;
+
+      if (this.pathFinding) {
+        this.hoveredGraphTile = getArrayIndex(this.pathFinding.getGraph(), tile.x, tile.y);
+      }
     }
   }
 
   private onCanvasMouseLeave(event: MouseEvent) {
     this.hoveredTile = undefined;
+    this.hoveredGraphTile = undefined;
+  }
+
+  private runBreadthFirst() {
+    this.pathFinding = new BreadthFirst(this.tiles, this.player, this.ctx);
+  }
+
+  private resetPathfinding() {
+    this.pathFinding = undefined;
+  }
+
+  private resetTiles() {
+    this.resetPathfinding();
+
+    for (let h = 0; h < this.horizontalSize; ++h) {
+      for (let v = 0; v < this.horizontalSize; ++v) {
+        if (!(this.tiles[h][v] instanceof Player) || !(this.tiles[h][v] instanceof Target)) {
+          this.tiles[h][v].isPassable = true;
+        }
+      }
+    }
   }
 
   private configureCanvas() {
     this.canvas.width = this.tileSize * this.horizontalSize;
     this.canvas.height = this.tileSize * this.verticalSize;
-    this.canvas.style.backgroundColor = '#eee';
   }
 
   private generateTiles() {
@@ -76,7 +114,7 @@ export class World {
       this.tiles[h] = [];
 
       for (let v = 0; v < this.verticalSize; ++v) {
-        this.tiles[h].push(new Tile(h, v));
+        this.tiles[h].push(new Tile(h, v, this.tileSize));
       }
     }
   }
@@ -85,7 +123,9 @@ export class World {
     const randomX = randomNumber(0, this.horizontalSize);
     const randomY = randomNumber(0, this.verticalSize);
 
-    this.tiles[randomX][randomY] = new Target(randomX, randomY);
+    this.target = new Target(randomX, randomY, this.tileSize);
+
+    this.tiles[randomX][randomY] = this.target;
   }
 
   private placePlayer() {
@@ -97,7 +137,9 @@ export class World {
       return;
     }
 
-    this.tiles[playerX][playerY] = new Player(playerX, playerY);
+    this.player = new Player(playerX, playerY, this.tileSize);
+
+    this.tiles[playerX][playerY] = this.player;
   }
 
   private render() {
@@ -110,6 +152,10 @@ export class World {
       this.ctx.lineWidth = 1;
 
       this.ctx.strokeRect(this.hoveredTile.x * this.tileSize, this.hoveredTile.y * this.tileSize, this.tileSize, this.tileSize);
+
+      if (this.pathFinding && this.hoveredGraphTile) {
+        this.renderTilePath(this.hoveredGraphTile);
+      }
     }
   }
 
@@ -120,6 +166,23 @@ export class World {
 
     this.ctx.fillRect(tile.x * this.tileSize, tile.y * this.tileSize, this.tileSize, this.tileSize);
     this.ctx.strokeRect(tile.x * this.tileSize, tile.y * this.tileSize, this.tileSize, this.tileSize);
+  }
+
+  private renderTilePath(tile: Tile) {
+    let currentTile = tile;
+
+    while (currentTile) {
+      const parentTile = currentTile.parentNode;
+
+      if (parentTile) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(currentTile.center.x, currentTile.center.y);
+        this.ctx.lineTo(parentTile.center.x, parentTile.center.y);
+        this.ctx.stroke();
+      }
+
+      currentTile = parentTile;
+    }
   }
 }
 
