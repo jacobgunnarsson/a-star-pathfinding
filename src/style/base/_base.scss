@@ -1,0 +1,37 @@
+/*
+ * _base.scss
+ *
+ * This is a good place to put 'opinionated' resets.
+ */
+
+body {
+  // Set a standardized guaranteed line-height of 1, since the default
+  // interpreted value of 'normal' is browser specific
+  // http://jaydenseric.com/blog/forget-normalize-or-resets-lay-your-own-css-foundation
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*:before,
+*:after { box-sizing: border-box; }
+
+// Prevent overflowing of images in fluid containers
+img { max-width: 100%; }
+
+a,
+a:hover,
+a:focus,
+a:active { text-decoration: none; }
+
+h1, h2 { font-style: normal; }
+
+p,
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+ul, ol { list-style: none; }

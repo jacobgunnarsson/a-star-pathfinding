@@ -1,0 +1,11 @@
+/*
+ * _utils.scss
+ */
+
+.visually-hidden { @include visually-hidden; }
+
+.valign { @include valign; }
+
+.truncate { @include truncate; }
+
+.hidden { display: none; }

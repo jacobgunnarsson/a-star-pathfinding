@@ -1,0 +1,42 @@
+{
+  "name": "a-star-test",
+  "version": "1.0.0",
+  "repository": {
+    "url": "git@github.com:jacobgunnarsson/a-star-test.git",
+    "type": "git"
+  },
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "webpack-dev-server -d --inline --progress --port 9000 --host 0.0.0.0",
+    "dist": "node_modules/.bin/rimraf dist && webpack --progress --profile --bail --optimize-minimize",
+    "tslint": "node_modules/.bin/tslint -c tslint.json \"src/**/*(*.ts|*.spec.ts)\""
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^8.0.7",
+    "autoprefixer": "^7.1.1",
+    "autoprefixer-loader": "^3.2.0",
+    "codelyzer": "^3.1.1",
+    "compression": "^1.6.2",
+    "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.28.4",
+    "extract-text-webpack-plugin": "^2.1.2",
+    "html-webpack-plugin": "^2.29.0",
+    "node-sass": "^4.5.3",
+    "postcss-loader": "^2.0.6",
+    "pre-commit": "^1.2.2",
+    "rimraf": "^2.6.1",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.18.2",
+    "ts-loader": "^2.2.2",
+    "tsd": "^0.6.5",
+    "tslint": "^5.4.3",
+    "typescript": "^2.4.1",
+    "webpack": "^3.0.0",
+    "webpack-dev-server": "^2.5.0",
+    "webpack-svgstore-plugin": "^4.0.1"
+  },
+  "pre-commit": [
+    "tslint"
+  ]
+}

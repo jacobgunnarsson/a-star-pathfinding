@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "noEmitHelpers": true,
+    "types": [
+      "node"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "compileOnSave": false,
+  "buildOnSave": false,
+  "filesGlob": [
+    "**/*.ts",
+    "**/*.tsx",
+    "!node_modules/**"
+  ]
+}

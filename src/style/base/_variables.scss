@@ -1,0 +1,35 @@
+/*
+ * _variables.scss
+ *
+ * This file contains SCSS variables that are used globally in the project.
+ * Keep variables namespaced with the concern of the variable i.e.
+ * $color--<color> or $font--<size-default>.
+ * Variables that are local to a file can be placed in the file itself.
+ */
+
+/*
+ * Breakpoints
+ */
+$breakpoint--small-only: '(max-width: 544px)';
+$breakpoint--medium-only: '(min-width: 544px) and (max-width: 768px)';
+$breakpoint--medium-and-above: '(min-width: 768px)';
+$breakpoint--large-and-above: '(min-width: 992px)';
+
+/*
+ * Typography
+ */
+$font--base-size: 16px;
+$font--base-family: Helvetica, sans-serif;
+
+/*
+ * Colors
+ */
+$color--white: #fff;
+$color--black: #000;
+
+/*
+ * Easings
+ */
+$ease--in-out: cubic-bezier(0.45, 0.675, 0, 1);
+$ease--in-out-fast: cubic-bezier(0.65, 0.225, 0, 1);
+$ease--in-out-slow: cubic-bezier(0.425, 0.725, 0, 1);

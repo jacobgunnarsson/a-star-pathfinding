@@ -1,0 +1,29 @@
+/*
+ * _template.scss
+ *
+ */
+
+/* _template config */
+
+/* _template default */
+@include default {
+  .template {
+
+  }
+}
+
+/* _template small-only */
+@include small-only {
+}
+
+/* _template medium-only */
+@include medium-only {
+}
+
+/* _template medium-and-above */
+@include medium-and-above {
+}
+
+/* _template large-and-above */
+@include large-and-above {
+}
