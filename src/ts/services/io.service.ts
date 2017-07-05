@@ -4,7 +4,7 @@ interface Listener {
   callback: (event: Event) => void;
 }
 
-export class IO {
+export class IOService {
   private listeners: Listener[] = [];
 
   constructor() {
@@ -22,4 +22,4 @@ export class IO {
   }
 }
 
-export const IOInstance = new IO();
+export const IOServiceInstance = new IOService();

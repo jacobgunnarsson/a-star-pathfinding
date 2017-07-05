@@ -1,11 +1,13 @@
+import { IOServiceInstance } from '../services/io.service';
+
 import { Tile } from './tile.module';
-import { TargetTile } from './target-tile.module';
-import { IOInstance } from './io.module';
+import { Target } from './target.module';
+import { Player } from './player.module';
 
 import { randomNumber } from '../utils/random-number';
 
 export class World {
-  private io = IOInstance;
+  private io = IOServiceInstance;
 
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
@@ -22,7 +24,8 @@ export class World {
     this.bindEvents();
     this.configureCanvas();
     this.generateTiles();
-    this.placeTargetTile();
+    this.placeTarget();
+    this.placePlayer();
   }
 
   public update(): void {
@@ -78,11 +81,23 @@ export class World {
     }
   }
 
-  private placeTargetTile() {
+  private placeTarget() {
     const randomX = randomNumber(0, this.horizontalSize);
     const randomY = randomNumber(0, this.verticalSize);
 
-    this.tiles[randomX][randomY] = new TargetTile(randomX, randomY);
+    this.tiles[randomX][randomY] = new Target(randomX, randomY);
+  }
+
+  private placePlayer() {
+    const playerX = 3;
+    const playerY = 3;
+
+    if (this.tiles[playerX][playerY] instanceof Target) {
+      this.placePlayer();
+      return;
+    }
+
+    this.tiles[playerX][playerY] = new Player(playerX, playerY);
   }
 
   private render() {

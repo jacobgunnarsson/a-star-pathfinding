@@ -1,22 +1,20 @@
-import { World, WorldInstance } from './modules/world.module';
+import { WorldInstance } from './modules/world.module';
 
 export class AStarTest {
-  window: Window;
-  document: Document;
-  world: World = WorldInstance;
+  private window: Window;
+  private document: Document;
+  private world = WorldInstance;
 
-  gameLoop;
+  private gameLoop;
 
   constructor() {
     this.window = window;
     this.document = document;
 
-    this.setupGameLoop();
+    this.gameLoop = setInterval(this.onGameloopTick.bind(this), 16.667);
   }
 
-  private setupGameLoop() {
-    this.gameLoop = setInterval(() => {
-      this.world.update();
-    });
+  private onGameloopTick() {
+    this.world.update();
   }
 }
