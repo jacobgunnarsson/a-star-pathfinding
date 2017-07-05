@@ -35,10 +35,6 @@ export class World {
 
   public update() {
     this.render();
-
-    if (this.pathFinding) {
-      this.pathFinding.render();
-    }
   }
 
   public getTileForPixelCoordinate(x: number, y: number): Tile {
@@ -152,9 +148,19 @@ export class World {
       this.ctx.lineWidth = 1;
 
       this.ctx.strokeRect(this.hoveredTile.x * this.tileSize, this.hoveredTile.y * this.tileSize, this.tileSize, this.tileSize);
+    }
 
-      if (this.pathFinding && this.hoveredGraphTile) {
-        this.renderTilePath(this.hoveredGraphTile);
+    if (this.pathFinding) {
+      if (this.hoveredGraphTile) {
+        this.renderPathfindingForTile(this.hoveredGraphTile);
+      }
+
+      if (this.pathFinding.getFrontierTiles()) {
+        this.renderPathfinderFrontierTiles();
+      }
+
+      if (this.pathFinding.getVisitedTiles()) {
+        this.renderPathfinderVisitedTiles();
       }
     }
   }
@@ -168,7 +174,31 @@ export class World {
     this.ctx.strokeRect(tile.x * this.tileSize, tile.y * this.tileSize, this.tileSize, this.tileSize);
   }
 
-  private renderTilePath(tile: Tile) {
+  private renderPathfinderFrontierTiles() {
+    const frontierTiles = this.pathFinding.getFrontierTiles();
+
+    frontierTiles.forEach(frontierTile => {
+      this.ctx.fillStyle = '#f00';
+
+      this.ctx.beginPath();
+      this.ctx.arc(frontierTile.center.x, frontierTile.center.y, 4, 0, Math.PI * 2);
+      this.ctx.fill();
+    });
+  }
+
+  private renderPathfinderVisitedTiles() {
+    const visitedTiles = this.pathFinding.getVisitedTiles();
+
+    visitedTiles.forEach(visitedTile => {
+      this.ctx.fillStyle = '#ccc';
+
+      this.ctx.beginPath();
+      this.ctx.arc(visitedTile.center.x, visitedTile.center.y, 4, 0, Math.PI * 2);
+      this.ctx.fill();
+    });
+  }
+
+  private renderPathfindingForTile(tile: Tile) {
     let currentTile = tile;
 
     while (currentTile) {

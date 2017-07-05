@@ -23,25 +23,11 @@ export class BreadthFirst {
     }, 4);
   }
 
-  public render() {
-    this.visited.forEach(v => {
-      this.ctx.fillStyle = '#ccc';
-
-      this.ctx.beginPath();
-      this.ctx.arc(v.center.x, v.center.y, 4, 0, Math.PI * 2);
-      this.ctx.fill();
-    });
-
-    this.frontier.forEach(v => {
-      this.ctx.fillStyle = '#f00';
-
-      this.ctx.beginPath();
-      this.ctx.arc(v.center.x, v.center.y, 4, 0, Math.PI * 2);
-      this.ctx.fill();
-    });
-  }
-
   public getGraph(): Tile[][] { return this.graph; }
+
+  public getVisitedTiles(): Tile[] { return this.visited; }
+
+  public getFrontierTiles(): Tile[] { return this.frontier; }
 
   private advanceFrontier() {
     const current = this.frontier.shift();
